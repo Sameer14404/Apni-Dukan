@@ -1,62 +1,79 @@
-import { useEffect, useState } from "react"
-import { Box, Image, Badge, Text, Stack } from '@chakra-ui/react';
+import { useEffect, useState } from "react";
+import {
+  Box,
+  Grid,
+  GridItem,
+  Image,
+  Badge,
+  Text,
+  Stack,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import axios from "axios";
-  async function fetchData(params) {
-    let api = "https://dummyjson.com/products";
 
-    try {
-        const final = await axios.get(api, {
-            params: {
-                category: [params.filter1, params.filter2].join("&"),
-            },
-        });
+async function fetchData(key) {
+  const api = "https://dummyjson.com/products/category/";
+  const url = `${api}${key}`;
 
-        return final;
-    } catch (error) {
-      
-        console.error("Error fetching data:", error);
-        throw error;
-    }
-}
-
-export default  function Electronic(){
-const [data,setdata]=useState([]);
-const filters = {
-    filter1: "smartphones",
-    filter2: "laptops",
+  try {
+    const response = await axios.get(url);
+    return response.data.products;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error; // Re-throw the error for handling
   }
-  useEffect(()=>{
-    FetchingData()
-  },[])
-const FetchingData= async()=>{
-    const res = await fetchData(filters);
-setdata(res.data.products);
 }
-console.log(data)
-    return<>
-    { data && data.map((el)=> <Box
-      maxW={{ base: 'sm', md: 'md', lg: 'lg', xl: 'xl' }}
-      borderWidth="1px"
-      borderRadius="lg"
-      overflow="hidden"
-      key={el.id}
-    >
-      <Image src={el.thumbnail} alt={el.brand} />
 
-      <Box p="4">
-        <Stack spacing="1">
-          <Badge borderRadius="full" px="2" colorScheme="teal">
-            {el.brand}
-          </Badge>
-          <Text fontSize={{ base: 'md', md: 'lg', lg: 'xl' }} fontWeight="bold">
-            ${`${el.price} RS`}
-          </Text>
-          <Box d="flex" mt="2" alignItems="center">
-         
-            Rating: {el.rating}
-          </Box>
-        </Stack>
-      </Box>
-    </Box>)}
-    </>
+export default function Electronic() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchDataForElectronics = async () => {
+      try {
+        const phoneData = await fetchData("smartphones");
+        const laptopData = await fetchData("laptops");
+        const combinedData = [...phoneData, ...laptopData];
+        setData(combinedData);
+      } catch (error) {
+        // Handle errors here, e.g., display an error message or retry logic
+        console.error("Error fetching data:", error);
+        // You can also implement retry logic or display an error message to the user
+      }
+    };
+
+    fetchDataForElectronics();
+  }, []);
+
+  return (
+    <Grid
+      templateColumns={`repeat(${useBreakpointValue({ base: 1, md: 2, lg: 3, xl: 4 })}, 1fr)`}
+      gap={6}
+    >
+      {data.length > 0 ? (
+        data.map((product) => (
+          <GridItem key={product.id} p={4}>
+            <Box
+              as="card"
+              borderRadius="md"
+              boxShadow="lg"
+              _hover={{ transform: "scale(1.02)", boxShadow: "2xl" }}
+            >
+              <Image src={product.thumbnail} alt={product.brand} w="full" h="200" />
+              <Stack spacing={4} textAlign="center">
+                <Text fontSize="xl" fontWeight="bold">{product.title}</Text>
+                <Badge colorScheme="teal" mr={2}>
+                  {product.category}
+                </Badge>
+                <Text>Brand: {product.brand}</Text>
+                <Text>&#8377; {product.price}</Text>
+                <Text>{product.description}</Text>
+              </Stack>
+            </Box>
+          </GridItem>
+        ))
+      ) : (
+        <Text>Loading products...</Text>
+      )}
+    </Grid>
+  );
 }

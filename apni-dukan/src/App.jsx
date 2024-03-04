@@ -9,7 +9,7 @@ import Allroutes from './Routes/Allroutes'
 function App() {
 
   return(<>
-<Electronic/>
+<Allroutes/>
 
   </>)
 }

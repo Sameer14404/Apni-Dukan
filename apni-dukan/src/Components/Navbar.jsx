@@ -1,11 +1,7 @@
 import { Stack, Image, Box, Heading, Input, Center } from "@chakra-ui/react";
 import logo from "../assets/Apni-dukan-logo.png";
 
-import Carousel from "./ImageCrousel";
-import ProductCarousel from "./ProductCrousel";
-import Footer from "./Footer";
-import Groceries from "./Groceries";
-import SkinCare from "./Skin";
+
 
 
 
@@ -33,7 +29,7 @@ function Navbar() {
           </Center>
        </Stack>
           
-<Stack direction="row"  spacing="24px" justifyContent="space-between" width="600px" >
+<Stack direction="row"  spacing="24px" justifyContent="space-between" width="60%" >
           <Box>
             <Heading as="h4" size="md">
               Home
@@ -42,7 +38,13 @@ function Navbar() {
 
           <Box>
             <Heading as="h4" size="md">
-              Contact
+              Products
+            </Heading>
+          </Box>
+
+          <Box>
+            <Heading as="h4" size="md">
+            Electronic
             </Heading>
           </Box>
 
@@ -51,21 +53,17 @@ function Navbar() {
               Login
             </Heading>
           </Box>
-
+          
           <Box>
             <Heading as="h4" size="md">
-              Cart
+           Cart
             </Heading>
           </Box>
         </Stack>
       </Box>
     
     
-    <Carousel/>
-    <Groceries/>
- <ProductCarousel/>
-<SkinCare/>
-<Footer/>
+ 
     </>
   );
 }
