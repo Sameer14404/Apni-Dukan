@@ -1,6 +1,6 @@
 import { Stack, Image, Box, Heading, Input, Center } from "@chakra-ui/react";
 import logo from "../assets/Apni-dukan-logo.png";
-
+import { Link } from "react-router-dom";
 
 
 
@@ -31,21 +31,27 @@ function Navbar() {
           
 <Stack direction="row"  spacing="24px" justifyContent="space-between" width="60%" >
           <Box>
-            <Heading as="h4" size="md">
+           <Link to="/">
+           <Heading as="h4" size="md">
               Home
             </Heading>
+           </Link>
           </Box>
 
           <Box>
-            <Heading as="h4" size="md">
+           <Link to="/products">
+           <Heading as="h4" size="md">
               Products
             </Heading>
+           </Link>
           </Box>
 
           <Box>
-            <Heading as="h4" size="md">
-            Electronic
+           <Link to="/electronics">
+           <Heading as="h4" size="md">
+              Electronics
             </Heading>
+           </Link>
           </Box>
 
           <Box>

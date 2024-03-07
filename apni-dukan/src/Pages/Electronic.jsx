@@ -1,16 +1,8 @@
-import { useEffect, useState } from "react";
-import {
-  Box,
-  Grid,
-  GridItem,
-  Image,
-  Badge,
-  Text,
-  Stack,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import { Box, Flex, GridItem, Image, Badge, Text } from "@chakra-ui/react";
 import axios from "axios";
-
+import Navbar from "../Components/Navbar"
+import Footer from "../Components/Footer"
 async function fetchData(key) {
   const api = "https://dummyjson.com/products/category/";
   const url = `${api}${key}`;
@@ -18,62 +10,98 @@ async function fetchData(key) {
   try {
     const response = await axios.get(url);
     return response.data.products;
+  
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Re-throw the error for handling
+    // Handle the error here, e.g., display an error message or redirect to another page
+    // You can use conditional rendering to display an error message based on the error state
   }
 }
 
-export default function Electronic() {
+const Electronic = () => {
   const [data, setData] = useState([]);
+  const [error, setError] = useState(null);
+  const fetchDataForElectronics = async () => {
+    try {
+      const phoneData = await fetchData("smartphones");
+      const laptopData = await fetchData("laptops");
+      const combinedData = [...phoneData, ...laptopData];
+      setData(combinedData);
+    } catch (error) {
+      setError(error); // Store the error for handling
+    }
+  };
+
 
   useEffect(() => {
-    const fetchDataForElectronics = async () => {
-      try {
-        const phoneData = await fetchData("smartphones");
-        const laptopData = await fetchData("laptops");
-        const combinedData = [...phoneData, ...laptopData];
-        setData(combinedData);
-      } catch (error) {
-        // Handle errors here, e.g., display an error message or retry logic
-        console.error("Error fetching data:", error);
-        // You can also implement retry logic or display an error message to the user
-      }
-    };
-
+  
     fetchDataForElectronics();
   }, []);
 
+
+  const colorScheme = {
+    // Customize colors based on your preferences, here's an example
+    primary: "teal",
+    secondary: "gray.500",
+    accent: "orange.400",
+  };
+
   return (
-    <Grid
-      templateColumns={`repeat(${useBreakpointValue({ base: 1, md: 2, lg: 3, xl: 4 })}, 1fr)`}
-      gap={6}
+  
+   <Box>
+    <Navbar/>
+   <Box
+      display="grid"
+      gridTemplateColumns="repeat(auto-fill, minmax(200px, 1fr))"
+      gridGap="20px"
+      p={4}
     >
-      {data.length > 0 ? (
+      {error ? (
+        <Box bg="red.100" borderRadius="lg" p={4} textAlign="center">
+          <Text color="red.500" fontSize="lg" fontWeight="bold">
+            An error occurred while fetching data. Please try again later.
+          </Text>
+        </Box>
+      ) : data.length > 0 ? (
         data.map((product) => (
-          <GridItem key={product.id} p={4}>
+          <GridItem key={product.id}>
             <Box
-              as="card"
-              borderRadius="md"
-              boxShadow="lg"
-              _hover={{ transform: "scale(1.02)", boxShadow: "2xl" }}
+            
+              borderRadius="30%"
+              boxShadow='dark-lg'
+             
             >
-              <Image src={product.thumbnail} alt={product.brand} w="full" h="200" />
-              <Stack spacing={4} textAlign="center">
-                <Text fontSize="xl" fontWeight="bold">{product.title}</Text>
-                <Badge colorScheme="teal" mr={2}>
-                  {product.category}
-                </Badge>
-                <Text>Brand: {product.brand}</Text>
-                <Text>&#8377; {product.price}</Text>
-                <Text>{product.description}</Text>
-              </Stack>
+              <Image
+                src={product.thumbnail}
+                alt={product.brand}
+                h="200"
+               w="200px"
+               
+              />
+              <Flex direction="column" justify="space-between" p={4}>
+                <Box>
+                  <Text fontSize="xl" fontWeight="bold">{product.title}</Text>
+                  <Badge colorScheme={colorScheme.primary} mr={2}>
+                    {product.category}
+                  </Badge>
+                  <Text color={colorScheme.secondary}>Brand: {product.brand}</Text>
+                </Box>
+                <Text color={colorScheme.accent} fontSize="lg" fontWeight="bold">
+                  &#8377; {product.price}
+                </Text>
+              </Flex>
             </Box>
           </GridItem>
         ))
       ) : (
-        <Text>Loading products...</Text>
+        <Text textAlign="center" fontSize="lg" fontWeight="bold">
+          Loading products...
+        </Text>
       )}
-    </Grid>
+    </Box>
+   <Footer/>
+   </Box>
   );
 }
+
+export default Electronic;
