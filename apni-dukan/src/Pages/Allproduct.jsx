@@ -29,7 +29,7 @@ async function fetchData() {
 const AllProduct = () => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+ 
   const fetchDataForElectronics = async () => {
     try {
       const phoneData = await fetchData();

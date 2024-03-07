@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { Box, Flex, GridItem, Image, Badge, Text } from "@chakra-ui/react";
 import axios from "axios";
 import Navbar from "../Components/Navbar"
